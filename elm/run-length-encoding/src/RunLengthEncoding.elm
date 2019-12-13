@@ -1,6 +1,34 @@
-module RunLengthEncoding exposing (decode, doTheThing, encode)
+module RunLengthEncoding exposing (decode, doTheOtherThing, doTheThing, encode)
 
 import Regex
+
+
+isNumber : String -> Bool
+isNumber x =
+    case String.toInt x of
+        Just _ ->
+            True
+
+        Nothing ->
+            False
+
+
+getOldNum : String -> String
+getOldNum str =
+    let
+        leftLetter =
+            String.left 1 str
+    in
+    if isNumber leftLetter then
+        leftLetter ++ getOldNum (String.dropLeft 1 str)
+
+    else
+        ""
+
+
+appendBefore : String -> String -> String
+appendBefore a b =
+    b ++ a
 
 
 doTheThing : Char -> String -> Maybe String
@@ -17,29 +45,6 @@ doTheThing char string =
 
         oldLetter =
             String.slice oldNumLength (oldNumLength + 1) string
-
-        isNumber x =
-            case String.toInt x of
-                Just _ ->
-                    True
-
-                Nothing ->
-                    False
-
-        getOldNum : String -> String
-        getOldNum str =
-            let
-                leftLetter =
-                    String.left 1 str
-            in
-            if isNumber leftLetter then
-                leftLetter ++ getOldNum (String.dropLeft 1 str)
-
-            else
-                ""
-
-        appendBefore a b =
-            b ++ a
     in
     if oldLetter == newLetter then
         String.toInt oldNum
@@ -67,7 +72,7 @@ encode string =
         requiredAnnoyinglyVerboseRegexFunction userRegex replacer str =
             case Regex.fromString userRegex of
                 Nothing ->
-                    string
+                    str
 
                 Just safeRegex ->
                     Regex.replace safeRegex replacer str
@@ -80,11 +85,46 @@ encode string =
 
 decode : String -> String
 decode string =
-    "Please implement this function"
+    String.foldl doTheOtherThing "" string
 
 
+doTheOtherThing : Char -> String -> String
+doTheOtherThing char string =
+    let
+        newChar : String
+        newChar =
+            String.fromChar char
 
-{- slice for second letter. convert char to string and compare
-   if the same, grab the first character and increment
-   if different, append 1 + the new characters
--}
+        number =
+            findNumber "" string
+
+        numberLength =
+            String.length number
+
+        findNumber : String -> String -> String
+        findNumber acc str =
+            let
+                current =
+                    String.right 1 str
+            in
+            if isNumber current then
+                findNumber (current ++ acc) (String.dropRight 1 str)
+
+            else
+                acc
+
+        repeatString : String -> String -> String
+        repeatString str numString =
+            let
+                times =
+                    Maybe.withDefault 1 (String.toInt numString)
+            in
+            String.repeat times str
+    in
+    if not (isNumber newChar) then
+        number
+            |> repeatString newChar
+            |> (++) (String.dropRight numberLength string)
+
+    else
+        string ++ newChar
