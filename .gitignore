@@ -1,0 +1,5 @@
+**/**.swp
+**/elm-stuff
+**/.exercism
+*.code-workspace
+**/.DS_Store
