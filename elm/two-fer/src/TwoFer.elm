@@ -3,8 +3,10 @@ module TwoFer exposing (twoFer)
 
 twoFer : Maybe String -> String
 twoFer name =
-    case name of
-        Just nm ->
-            "One for " ++ nm ++ ", one for me."
-        Nothing ->
-            "One for you, one for me."
+    let
+        shareWith : String -> String
+        shareWith person =
+            "One for " ++ person ++ ", one for me."
+    in
+    Maybe.map shareWith name
+        |> Maybe.withDefault (shareWith "you")
