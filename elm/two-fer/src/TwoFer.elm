@@ -4,9 +4,7 @@ module TwoFer exposing (twoFer)
 twoFer : Maybe String -> String
 twoFer name =
     let
-        shareWith : String -> String
-        shareWith person =
-            "One for " ++ person ++ ", one for me."
+        person =
+            name |> Maybe.withDefault "you"
     in
-    Maybe.map shareWith name
-        |> Maybe.withDefault (shareWith "you")
+    "One for " ++ person ++ ", one for me."
