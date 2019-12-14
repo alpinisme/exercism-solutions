@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+
 ### Notes to self ###
 
 # (( exp )) evaluates exp according to c arithmetic to return a Boolean
