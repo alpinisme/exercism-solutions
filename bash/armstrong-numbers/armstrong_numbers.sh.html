@@ -1,0 +1,83 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<title>~/Exercism/bash/armstrong-numbers/armstrong_numbers.sh.html</title>
+<meta name="Generator" content="Vim/8.1">
+<meta name="plugin-version" content="vim8.1_v2">
+<meta name="syntax" content="bash">
+<meta name="settings" content="number_lines,use_css,pre_wrap,no_foldcolumn,expand_tabs,line_ids,prevent_copy=">
+<meta name="colorscheme" content="dracula">
+<style type="text/css">
+<!--
+pre { white-space: pre-wrap; font-family: monospace; color: #dadada; background-color: #303030; }
+body { font-family: monospace; color: #dadada; background-color: #303030; }
+* { font-size: 1em; }
+.DraculaComment { color: #5f5faf; }
+.DraculaPink { color: #ff87d7; }
+.DraculaYellow { color: #ffff87; }
+.LineNr { color: #ffff00; }
+.DraculaGreen { color: #5fff87; }
+.DraculaFg { color: #dadada; }
+.DraculaPurple { color: #af87ff; }
+-->
+</style>
+
+<script type='text/javascript'>
+<!--
+
+/* function to open any folds containing a jumped-to line before jumping to it */
+function JumpToLine()
+{
+  var lineNum;
+  lineNum = window.location.hash;
+  lineNum = lineNum.substr(1); /* strip off '#' */
+
+  if (lineNum.indexOf('L') == -1) {
+    lineNum = 'L'+lineNum;
+  }
+  var lineElem = document.getElementById(lineNum);
+  /* Always jump to new location even if the line was hidden inside a fold, or
+   * we corrected the raw number to a line ID.
+   */
+  if (lineElem) {
+    lineElem.scrollIntoView(true);
+  }
+  return true;
+}
+if ('onhashchange' in window) {
+  window.onhashchange = JumpToLine;
+}
+
+-->
+</script>
+</head>
+<body onload='JumpToLine();'>
+<pre id='vimCodeElement'>
+<span id="L1" class="LineNr"> 1 </span><span class="DraculaComment">#!/usr/bin/env bash</span>
+<span id="L2" class="LineNr"> 2 </span>
+<span id="L3" class="LineNr"> 3 </span><span class="DraculaGreen">main () {</span>
+<span id="L4" class="LineNr"> 4 </span>    <span class="DraculaFg">input</span>=<span class="DraculaPink">&quot;</span><span class="DraculaPink">$1</span><span class="DraculaPink">&quot;</span>
+<span id="L5" class="LineNr"> 5 </span>    <span class="DraculaPink">if </span><span class="DraculaFg">[[</span> <span class="DraculaPink">!</span> <span class="DraculaPink">&quot;</span><span class="DraculaPink">$input</span><span class="DraculaPink">&quot;</span> <span class="DraculaPink">=~</span> <span class="DraculaYellow">^[0-9]+$</span> <span class="DraculaFg">]]</span><span class="DraculaPink">;</span> <span class="DraculaPink">then</span>
+<span id="L6" class="LineNr"> 6 </span>        <span class="DraculaPink">echo</span><span class="DraculaYellow"> </span><span class="DraculaPink">&quot;</span><span class="DraculaYellow">only integer inputs allowed</span><span class="DraculaPink">&quot;</span>
+<span id="L7" class="LineNr"> 7 </span>        <span class="DraculaPink">exit</span> <span class="DraculaPurple">1</span>
+<span id="L8" class="LineNr"> 8 </span>    <span class="DraculaPink">fi</span>
+<span id="L9" class="LineNr"> 9 </span>
+<span id="L10" class="LineNr">10 </span>    <span class="DraculaFg">length</span>=<span class="DraculaPink">&quot;</span><span class="DraculaPink">${#</span><span class="DraculaPink">input</span><span class="DraculaPink">}</span><span class="DraculaPink">&quot;</span>
+<span id="L11" class="LineNr">11 </span>    for <span class="DraculaFg">((</span> i<span class="DraculaPink">=</span><span class="DraculaYellow">0</span> <span class="DraculaPink">;</span> i <span class="DraculaPink">&lt;</span> <span class="DraculaPink">&quot;</span><span class="DraculaPink">$length</span><span class="DraculaPink">&quot;</span> <span class="DraculaPink">;</span> i++ <span class="DraculaFg">))</span> <span class="DraculaPink">do</span>
+<span id="L12" class="LineNr">12 </span>        <span class="DraculaFg">pow</span>=<span class="DraculaPink">$((</span><span class="DraculaPink"> </span><span class="DraculaPink">${</span><span class="DraculaPink">input</span><span class="DraculaPink">:i</span><span class="DraculaPink">:1</span><span class="DraculaPink">}</span><span class="DraculaPink"> ** length </span><span class="DraculaPink">))</span>
+<span id="L13" class="LineNr">13 </span>        <span class="DraculaPink">(</span><span class="DraculaPink">(</span><span class="DraculaFg">result+</span>=pow<span class="DraculaPink">)</span><span class="DraculaPink">)</span>
+<span id="L14" class="LineNr">14 </span>    <span class="DraculaPink">done</span>
+<span id="L15" class="LineNr">15 </span>
+<span id="L16" class="LineNr">16 </span>    <span class="DraculaPink">if </span><span class="DraculaFg">[[</span> <span class="DraculaPink">$result</span> <span class="DraculaPink">==</span> <span class="DraculaPink">$input</span> <span class="DraculaFg">]]</span><span class="DraculaPink">;</span> <span class="DraculaPink">then</span>
+<span id="L17" class="LineNr">17 </span>        <span class="DraculaPink">echo</span><span class="DraculaYellow"> </span><span class="DraculaPink">&quot;</span><span class="DraculaYellow">true</span><span class="DraculaPink">&quot;</span>
+<span id="L18" class="LineNr">18 </span>    <span class="DraculaPink">else</span>
+<span id="L19" class="LineNr">19 </span>        <span class="DraculaPink">echo</span><span class="DraculaYellow"> </span><span class="DraculaPink">&quot;</span><span class="DraculaYellow">false</span><span class="DraculaPink">&quot;</span>
+<span id="L20" class="LineNr">20 </span>    <span class="DraculaPink">fi</span>
+<span id="L21" class="LineNr">21 </span><span class="DraculaGreen">}</span>
+<span id="L22" class="LineNr">22 </span>
+<span id="L23" class="LineNr">23 </span>main <span class="DraculaPink">&quot;</span><span class="DraculaPink">$@</span><span class="DraculaPink">&quot;</span>
+</pre>
+</body>
+</html>
+<!-- vim: set foldmethod=manual : -->
