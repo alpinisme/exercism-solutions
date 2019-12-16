@@ -1,71 +1,60 @@
 module RunLengthEncoding exposing (decode, encode)
 
-import Regex
-
-
-
 -- encoding
 
 
 encode : String -> String
 encode string =
+    string |> String.foldr charsToTuples [] |> List.foldr tuplesToString ""
+
+
+tuplesToString : ( Char, Int ) -> String -> String
+tuplesToString ( char, int ) string =
     let
-        requiredAnnoyinglyVerboseRegexFunction userRegex replacer str =
-            case Regex.fromString userRegex of
-                Nothing ->
-                    str
-
-                Just safeRegex ->
-                    Regex.replace safeRegex replacer str
-
-        regex =
-            "^1(?=[^0-9])|(?<=[^0-9])1(?=[^0-9])"
+        stringWithCharAdded =
+            String.cons char string
     in
-    string |> String.foldr encodingReducer "" |> requiredAnnoyinglyVerboseRegexFunction regex (\_ -> "")
-
-
-encodingReducer : Char -> String -> String
-encodingReducer char string =
-    let
-        newLetter =
-            String.fromChar char
-
-        oldNum =
-            getOldNum string
-
-        oldNumLength =
-            String.length oldNum
-
-        oldLetter =
-            String.slice oldNumLength (oldNumLength + 1) string
-    in
-    if oldLetter == newLetter then
-        String.toInt oldNum
-            |> Maybe.map ((+) 1)
-            |> Maybe.map String.fromInt
-            |> Maybe.map (appendBefore (String.dropLeft oldNumLength string))
-            |> Maybe.withDefault "Uh, oh..."
+    if int == 1 then
+        stringWithCharAdded
 
     else
-        "1" ++ newLetter ++ string
+        String.fromInt int ++ stringWithCharAdded
 
 
-getOldNum : String -> String
-getOldNum str =
+charsToTuples : Char -> List ( Char, Int ) -> List ( Char, Int )
+charsToTuples char accumulator =
     let
-        leftLetter =
-            String.left 1 str
+        lastTuple : Maybe ( Char, Int )
+        lastTuple =
+            List.head accumulator
+
+        lastChar : Maybe Char
+        lastChar =
+            Maybe.map Tuple.first lastTuple
+
+        lastNumber : Int
+        lastNumber =
+            Maybe.map Tuple.second lastTuple |> Maybe.withDefault 1
+
+        isRepeatChar : Bool
+        isRepeatChar =
+            Maybe.map ((==) char) lastChar |> Maybe.withDefault False
+
+        incrementOldTuple : List ( Char, Int )
+        incrementOldTuple =
+            List.tail accumulator
+                |> Maybe.withDefault []
+                |> (::) ( char, lastNumber + 1 )
+
+        appendNewTuple : List ( Char, Int )
+        appendNewTuple =
+            ( char, 1 ) :: accumulator
     in
-    if isNumber leftLetter then
-        leftLetter ++ getOldNum (String.dropLeft 1 str)
+    if isRepeatChar then
+        incrementOldTuple
 
     else
-        ""
-
-
-appendBefore : String -> String -> String
-appendBefore a b =
-    b ++ a
+        appendNewTuple
 
 
 
@@ -80,49 +69,55 @@ decode string =
 decodingReducer : Char -> String -> String
 decodingReducer char string =
     let
-        newLetter : String
-        newLetter =
-            String.fromChar char
-
+        number : String
         number =
-            findNumber "" string
+            findNumberInString "" string
 
-        numberLength =
+        digits : Int
+        digits =
             String.length number
+
+        stringWithNumberRemoved : String
+        stringWithNumberRemoved =
+            String.dropRight digits string
+
+        appendNumForNextPass : Char -> String
+        appendNumForNextPass numChar =
+            string ++ String.fromChar numChar
+
+        replaceNumWithRepeatChar : Char -> String
+        replaceNumWithRepeatChar charToRepeat =
+            number
+                |> repeatChar charToRepeat
+                |> (++) stringWithNumberRemoved
     in
-    if not (isNumber newLetter) then
-        number
-            |> repeatString newLetter
-            |> (++) (String.dropRight numberLength string)
+    if not (Char.isDigit char) then
+        replaceNumWithRepeatChar char
 
     else
-        string ++ newLetter
+        appendNumForNextPass char
 
 
-findNumber : String -> String -> String
-findNumber acc str =
+findNumberInString : String -> String -> String
+findNumberInString digitsAlreadyFound string =
     let
         current =
-            String.right 1 str
+            String.right 1 string
     in
     if isNumber current then
-        findNumber (current ++ acc) (String.dropRight 1 str)
+        findNumberInString (current ++ digitsAlreadyFound) (String.dropRight 1 string)
 
     else
-        acc
+        digitsAlreadyFound
 
 
-repeatString : String -> String -> String
-repeatString string numString =
+repeatChar : Char -> String -> String
+repeatChar char numString =
     let
         times =
             Maybe.withDefault 1 (String.toInt numString)
     in
-    String.repeat times string
-
-
-
--- helper
+    String.repeat times (String.fromChar char)
 
 
 isNumber : String -> Bool
