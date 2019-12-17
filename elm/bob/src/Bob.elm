@@ -9,15 +9,15 @@ hey input =
 
         isSilence : Bool
         isSilence =
-            remark == ""
+            String.isEmpty remark
 
         isYelling : Bool
         isYelling =
-            String.toUpper remark == remark && not (String.toLower remark == remark)
+            String.any Char.isUpper remark && (not <| String.any Char.isLower remark) 
 
         isQuestion : Bool
         isQuestion =
-            String.right 1 remark == "?"
+            String.endsWith "?" remark
     in
     if isSilence then
         "Fine. Be that way!"
