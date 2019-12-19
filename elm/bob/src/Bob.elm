@@ -13,7 +13,7 @@ hey input =
 
         isYelling : Bool
         isYelling =
-            String.any Char.isUpper remark && (not <| String.any Char.isLower remark) 
+            String.any Char.isAlpha remark && (not <| String.any Char.isLower remark) 
 
         isQuestion : Bool
         isQuestion =
