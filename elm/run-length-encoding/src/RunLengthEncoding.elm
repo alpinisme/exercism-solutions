@@ -3,58 +3,48 @@ module RunLengthEncoding exposing (decode, encode)
 -- encoding
 
 
+type alias CharCount =
+    ( Char, Int )
+
+
 encode : String -> String
 encode string =
-    string |> String.foldr charsToTuples [] |> List.foldr tuplesToString ""
-
-
-tuplesToString : ( Char, Int ) -> String -> String
-tuplesToString ( char, int ) string =
     let
-        stringWithCharAdded =
-            String.cons char string
+        performCharCountingFold : ( Char, String ) -> ( CharCount, List CharCount )
+        performCharCountingFold ( char, str ) =
+            String.foldl countCharRepetitions ( ( char, 1 ), [] ) str
+
+        reattachCounter : ( CharCount, List CharCount ) -> List CharCount
+        reattachCounter ( tuple, list ) =
+            tuple :: list
     in
-    if int == 1 then
-        stringWithCharAdded
+    String.uncons string
+        |> Maybe.map performCharCountingFold
+        |> Maybe.map reattachCounter
+        |> Maybe.withDefault []
+        |> List.foldl stringifyCounts ""
+
+
+countCharRepetitions : Char -> ( CharCount, List CharCount ) -> ( CharCount, List CharCount )
+countCharRepetitions char ( ( lastChar, count ), accumulator ) =
+    if char == lastChar then
+        ( ( char, count + 1 ), accumulator )
 
     else
-        String.fromInt int ++ stringWithCharAdded
+        ( ( char, 1 ), ( lastChar, count ) :: accumulator )
 
 
-charsToTuples : Char -> List ( Char, Int ) -> List ( Char, Int )
-charsToTuples char accumulator =
+stringifyCounts : CharCount -> String -> String
+stringifyCounts ( char, count ) accumulator =
     let
-        lastTuple : Maybe ( Char, Int )
-        lastTuple =
-            List.head accumulator
-
-        lastChar : Maybe Char
-        lastChar =
-            Maybe.map Tuple.first lastTuple
-
-        lastNumber : Int
-        lastNumber =
-            Maybe.map Tuple.second lastTuple |> Maybe.withDefault 1
-
-        isRepeatChar : Bool
-        isRepeatChar =
-            Maybe.map ((==) char) lastChar |> Maybe.withDefault False
-
-        incrementOldTuple : List ( Char, Int )
-        incrementOldTuple =
-            List.tail accumulator
-                |> Maybe.withDefault []
-                |> (::) ( char, lastNumber + 1 )
-
-        appendNewTuple : List ( Char, Int )
-        appendNewTuple =
-            ( char, 1 ) :: accumulator
+        accumulatorWithChar =
+            String.cons char accumulator
     in
-    if isRepeatChar then
-        incrementOldTuple
+    if count == 1 then
+        accumulatorWithChar
 
     else
-        appendNewTuple
+        String.fromInt count ++ accumulatorWithChar
 
 
 
@@ -128,3 +118,7 @@ isNumber x =
 
         Nothing ->
             False
+
+-- new section
+
+
