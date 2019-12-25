@@ -1,0 +1,167 @@
+
+elm-test 0.19.1
+---------------
+
+Running 16 tests. To reproduce these results, run: elm-test --fuzz 100 --seed 398701014340050 /Users/MNelson/Exercism/elm/space-age/tests/Tests.elm
+
+[2m↓ Tests
+[22m[2m↓ SpaceAge
+[22m[31m✗ 67.6 Earth years in Mercury years
+[39m
+    16.29300487036497
+    ╷
+    │ Expect.within Absolute 0.01
+    ╵
+    280.88
+
+
+[2m↓ Tests
+[22m[2m↓ SpaceAge
+[22m[31m✗ 2 Earth years in Mercury years
+[39m
+    0.4816934
+    ╷
+    │ Expect.within Absolute 0.01
+    ╵
+    8.3
+
+
+[2m↓ Tests
+[22m[2m↓ SpaceAge
+[22m[31m✗ 6 Earth years in Venus years
+[39m
+    3.7008184065343803
+    ╷
+    │ Expect.within Absolute 0.01
+    ╵
+    9.78
+
+
+[2m↓ Tests
+[22m[2m↓ SpaceAge
+[22m[31m✗ 2 Earth years in Venus years
+[39m
+    1.23039452
+    ╷
+    │ Expect.within Absolute 0.01
+    ╵
+    3.25
+
+
+[2m↓ Tests
+[22m[2m↓ SpaceAge
+[22m[31m✗ 67.6 Earth years in Mars years
+[39m
+    126.93916768945599
+    ╷
+    │ Expect.within Absolute 0.01
+    ╵
+    35.88
+
+
+[2m↓ Tests
+[22m[2m↓ SpaceAge
+[22m[31m✗ 2 Earth years in Mars years
+[39m
+    3.7616316
+    ╷
+    │ Expect.within Absolute 0.01
+    ╵
+    1.06
+
+
+[2m↓ Tests
+[22m[2m↓ SpaceAge
+[22m[31m✗ 28.6 Earth years in Jupiter years
+[39m
+    339.018565963791
+    ╷
+    │ Expect.within Absolute 0.01
+    ╵
+    2.41
+
+
+[2m↓ Tests
+[22m[2m↓ SpaceAge
+[22m[31m✗ 2 Earth years in Jupiter years
+[39m
+    23.72523
+    ╷
+    │ Expect.within Absolute 0.01
+    ╵
+    0.17
+
+
+[2m↓ Tests
+[22m[2m↓ SpaceAge
+[22m[31m✗ 63.5 Earth years in Saturn years
+[39m
+    1866.2698050548838
+    ╷
+    │ Expect.within Absolute 0.01
+    ╵
+    2.15
+
+
+[2m↓ Tests
+[22m[2m↓ SpaceAge
+[22m[31m✗ 2 Earth years in saturn years
+[39m
+    58.894996
+    ╷
+    │ Expect.within Absolute 0.01
+    ╵
+    0.07
+
+
+[2m↓ Tests
+[22m[2m↓ SpaceAge
+[22m[31m✗ 38.3 Earth years in Uranus years
+[39m
+    3221.7518456327407
+    ╷
+    │ Expect.within Absolute 0.01
+    ╵
+    0.46
+
+
+[2m↓ Tests
+[22m[2m↓ SpaceAge
+[22m[31m✗ 2 Earth years in uranus years
+[39m
+    168.033692
+    ╷
+    │ Expect.within Absolute 0.01
+    ╵
+    0.02
+
+
+[2m↓ Tests
+[22m[2m↓ SpaceAge
+[22m[31m✗ 57.7 Earth years in Neptune years
+[39m
+    9509.242118069877
+    ╷
+    │ Expect.within Absolute 0.01
+    ╵
+    0.35
+
+
+[2m↓ Tests
+[22m[2m↓ SpaceAge
+[22m[31m✗ 2 Earth years in Neptune years
+[39m
+    329.58264
+    ╷
+    │ Expect.within Absolute 0.01
+    ╵
+    0.01
+
+
+[4m[31m
+TEST RUN FAILED[39m[24m[31m
+
+[39m[2mDuration: [22m171 ms
+[2mPassed:   [22m2
+[2mFailed:   [22m14
+
