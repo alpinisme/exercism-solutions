@@ -1,10 +1,10 @@
 module RunLengthEncoding exposing (decode, encode)
 
+import Parser exposing ((|=), Parser, Step(..))
+
+
+
 -- encoding
-
-
-type alias CharCount =
-    ( Char, Int )
 
 
 encode : String -> String
@@ -23,6 +23,10 @@ encode string =
         |> Maybe.map reattachCounter
         |> Maybe.withDefault []
         |> List.foldl stringifyCounts ""
+
+
+type alias CharCount =
+    ( Char, Int )
 
 
 countCharRepetitions : Char -> ( CharCount, List CharCount ) -> ( CharCount, List CharCount )
@@ -48,77 +52,43 @@ stringifyCounts ( char, count ) accumulator =
 
 
 
--- decoding
+-- decode
 
 
 decode : String -> String
 decode string =
-    String.foldl decodingReducer "" string
+    Parser.run parser string
+        |> Result.withDefault []
+        |> List.map (\c -> String.repeat c.count c.char)
+        |> String.concat
+        |> String.reverse
 
 
-decodingReducer : Char -> String -> String
-decodingReducer char string =
-    let
-        number : String
-        number =
-            findNumberInString "" string
-
-        digits : Int
-        digits =
-            String.length number
-
-        stringWithNumberRemoved : String
-        stringWithNumberRemoved =
-            String.dropRight digits string
-
-        appendNumForNextPass : Char -> String
-        appendNumForNextPass numChar =
-            string ++ String.fromChar numChar
-
-        replaceNumWithRepeatChar : Char -> String
-        replaceNumWithRepeatChar charToRepeat =
-            number
-                |> repeatChar charToRepeat
-                |> (++) stringWithNumberRemoved
-    in
-    if not (Char.isDigit char) then
-        replaceNumWithRepeatChar char
-
-    else
-        appendNumForNextPass char
+type alias Count =
+    { count : Int
+    , char : String
+    }
 
 
-findNumberInString : String -> String -> String
-findNumberInString digitsAlreadyFound string =
-    let
-        current =
-            String.right 1 string
-    in
-    if isNumber current then
-        findNumberInString (current ++ digitsAlreadyFound) (String.dropRight 1 string)
-
-    else
-        digitsAlreadyFound
+countParser : Parser Count
+countParser =
+    Parser.succeed Count
+        |= Parser.oneOf
+            [ Parser.succeed identity
+                |= Parser.int
+            , Parser.succeed 1
+            ]
+        |= (Parser.getChompedString <| Parser.chompIf (\char -> Char.isAlpha char || char == ' '))
 
 
-repeatChar : Char -> String -> String
-repeatChar char numString =
-    let
-        times =
-            Maybe.withDefault 1 (String.toInt numString)
-    in
-    String.repeat times (String.fromChar char)
-
-
-isNumber : String -> Bool
-isNumber x =
-    case String.toInt x of
-        Just _ ->
-            True
-
-        Nothing ->
-            False
-
--- new section
-
-
+parser : Parser (List Count)
+parser =
+    Parser.loop []
+        (\counts ->
+            Parser.oneOf
+                [ Parser.succeed (\count -> Loop (count :: counts))
+                    |= countParser
+                , Parser.succeed ()
+                    |> Parser.map (\_ -> Done counts)
+                ]
+        )
