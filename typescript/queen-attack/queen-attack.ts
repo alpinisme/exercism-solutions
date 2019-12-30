@@ -11,7 +11,7 @@ export default class QueenAttack {
     this.validate(); // throws error if invalid
   }
 
-  private hasOverlappingQueens(): boolean {
+  private hasPositionOverlap(): boolean {
     return this.white.join() === this.black.join();
   }
 
@@ -23,7 +23,7 @@ export default class QueenAttack {
   }
 
   private validate(): void {
-    if (this.hasOverlappingQueens()) {
+    if (this.hasPositionOverlap()) {
       throw new Error("Queens cannot share the same space");
     }
     if (this.hasQueensOffBoard()) {
